@@ -1,0 +1,102 @@
+---
+title: "Illapani_Lab0"
+author: "Srini Illapani"
+date: "September 3, 2015"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    css: ./lab.css
+    highlight: pygments
+    theme: cerulean
+---
+
+
+## Lab0
+
+In the Intro to R lesson, I recreated some of the displays and preliminary 
+analysis of Arbuthnot's baptism data. Lab 0 assignment involves repeating these 
+steps, but for present day birth records in the United States.  Loading up the 
+present day data with the following command.
+
+
+```{r load-present-data, eval=TRUE}
+source("more/present.R")
+```
+
+
+## The Data: US Birth Records
+
+We can take a look at the data by typing its name into the console.
+
+```{r view-data, eval=TRUE}
+present
+```
+
+What you should see are four columns of numbers, each row representing a different year: the first entry in each row is simply the row number (an index we can use to access the data from individual years if we want), the second is the year, and the third and fourth are the numbers of boys and girls born that year, respectively. 
+
+Note that the row numbers in the first column are not part of Arbuthnot's data. R adds them as part of its printout to help you make visual comparisons. You can think of them as the index that you see on the left side of a spreadsheet. In fact, the comparison to a spreadsheet will generally be helpful. R has stored the data in a kind of spreadsheet or table called a data frame. The data are stored in a data frame called `present`.
+
+
+
+1.  What years are included in this data set? What are the dimensions of the 
+    data frame and what are the variable or column names?
+    
+The data includes birth numbers from year 1940 to 2002. One can see the dimensions of this data frame by typing:
+
+
+```{r dim-data, eval = TRUE}
+dim(present)
+```
+
+This command should output `[1] 63 3`, indicating that there are 62 rows and 3 
+columns, just as it says next to the object in your workspace. You can see the names of these columns (or 
+variables) by typing:
+
+
+```{r names-data, eval=TRUE}
+names(present)
+```
+
+
+2.  How do these counts compare to Arbuthnot's? Are they on a similar scale?
+
+The counts in the 'present' data frame differ hugely compared to the ones in 'Arbuthnot's data frame. 
+They are on a different scale, thousands vs. millions scale.
+
+
+3.  Make a plot that displays the boy-to-girl ratio for every year in the data set. What do you see? 
+    Does Arbuthnot's observation about boys being born in greater proportion than girls hold up in the U.S.?
+    Include the plot in your response.
+
+Here is how one can create a plot diagram using the data frame. To calculate the boy-to-girl ratio for every year
+in the data set, use the following plot function:
+
+
+```{r boy-to-girl ratios, eval=TRUE}
+plot(present$year, (present$boys / present$girls), type = "l")
+```
+
+Compared to Arbuthnot's data, the trend is similar with the US present data. The boys to girls birth ratio is always 
+in greater proportion for boys each year compared to girls.
+
+
+4. In what year did we see the most total number of births in the U.S.? 
+
+The year is 1961. I had to use the sqldf package to use the select statement as shown below.
+
+
+```{r select-statement, eval=TRUE}
+library(sqldf)
+DF <- data.frame(present)
+top_year <- sqldf("select year, boys+girls from DF
+             order by boys+girls DESC LIMIT 1", 
+             row.names = TRUE)
+top_year
+```
+
+
+These data come from a report by the Centers for Disease Control 
+[http://www.cdc.gov/nchs/data/nvsr/nvsr53/nvsr53_20.pdf](http://www.cdc.gov/nchs/data/nvsr/nvsr53/nvsr53_20.pdf). 
+Check it out if you would like to read more about an analysis of sex ratios at 
+birth in the United States.
