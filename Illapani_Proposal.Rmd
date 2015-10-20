@@ -1,11 +1,11 @@
 ---
-title: "Illapani_IS606_Proposal - DRAFT"
+title: "Illapani_IS606_Proposal"
 author: "Srini Illapani"
 date: "October 16, 2015"
-output: word_document
+output: pdf_document
 ---
 
-## DRAFT -- NOT FINAL--  
+
 
 ```{r include=FALSE, cache=FALSE}
 # DO NOT REMOVE
@@ -21,21 +21,39 @@ if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axi
 })
 ```
 
-```{r}
-# load data
-
+```{r, eval=TRUE}
+# Load the necessary packages to be used for this project
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(ggplot2)
 ```
+
+
+
+```{r, eval=TRUE}
+# load data - Upload the file to my github repository and use the curl package to retrieve the dataset in to R.
+library(curl)
+
+endorsements <- read.csv(curl("https://raw.githubusercontent.com/isrini/SI_IS606/master/endorsements.csv"), header = TRUE)
+
+kable(head(endorsements,10))
+```
+
 
 
 ### Research question 
 
-**You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
-
+  Do number of endorsements increase the chances of winning the primaries and party nomination?  
+  We would also attempt to see if the money raised by the candidates is any indicator of winning the primaries, if time permits.  
 
 
 ### Cases 
 
-**What are the cases, and how many are there?**
+**What are the cases, and how many are there?**  
+
+  We will be looking at the democratic and republican party candidates for presidential primaries from
+  the year 1980 to 2012.
 
 
 
@@ -43,18 +61,39 @@ if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axi
 
 **Describe the method of data collection.**
 
-
+  Fundraising data since 1992 is taken from the Federal Election Commission website. Data from 1980 to 1988
+  is from various news    articles at the time of the filing deadline. This data is preliminary, though rarely
+  differs greatly from finalized data.  
+  
+  All the data used excludes self-funding by the candidates.
+  
+  
 
 ### Type of study 
 
-**What type of study is this (observational/experiment)?**
+**What type of study is this (observational/experiment)?**  
+
+  The presidential candidate endorsements for primary elections is an observational study performed by
+  FiveThirtyEight by collecting the data as mentioned above.
 
 
+### Data Source  
 
-### Data Source 
-
-**If you collected the data, state self-collected. If not, provide a citation/link.**
-
+  The data souce for the puropose of this Data project is FiveThirtyEight (https://github.com/fivethirtyeight/data).
+  Here is the list of variables that will be used for the project:  
+  
+  
+Value | Description
+------|------------
+year|Election year
+party|Political party
+candidate|Candidate running in primary
+endorsement_points|Weighted endorsements through June 30th of the year before the primary
+percentage_endorsement_points|Percentage of total weighted endorsement points for the candidate's political party through June 30th of the year before the primary
+money_raised|Money raised through June 30th of the year before the primary
+percentage_of_money|Percentage of total money raised by the candidate's political party through June 30th of the year before the primary
+primary_vote_percentage|Percentage of votes won in the primary
+won_primary|Did the candidate win the primary?
 
 
 
@@ -62,18 +101,30 @@ if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axi
 
 **What is the response variable, and what type is it (numerical/categorical)?**
 
+  The response variable for the question we are trying to answer - Do number of endorsements increase the chances of winning the    primaries? is 'won_primary'.  
+  
+  It is of type categorial, and can also be treated as numerical by converting to 0 or 1.
 
 
 ### Explanatory 
 
-**What is the explanatory variable, and what type is it (numerical/categorival)?**
+**What is the explanatory variable, and what type is it (numerical/categorical)?**  
 
-
+  The explanatory variables in the data set are 'endorsement_points' and 'money_raised'.
+  These are of type numerical.  
 
 ### Relevant summary statistics 
 
 **Provide summary statistics relevant to your research question. For example, if you're comparing means across groups provide means, SDs, sample sizes of each group. This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
 
 ```{r}
+# Sample statistics to be run answer the research question:
 
+# Using group by and summarise to find the mean endorsements by the year and party
+mean = group_by(endorsements,year) %>% 
+    filter(endorsement_points != 0) %>% 
+    summarise(mean(endorsement_points))
+
+head(mean)
 ```
+
