@@ -1,0 +1,215 @@
+---
+title: "Illapani_Final_Project_IS607"
+author: "Srini Illapani"
+date: "December 14, 2015"
+output:
+  word_document: default
+  html_document:
+    css: ./lab.css
+    highlight: pygments
+    theme: cerulean
+    toc: yes
+---
+
+
+### Part I
+
+Figure A below represents the distribution of an observed variable. Figure B below represents the distribution
+of the mean from 500 random samples of size 30 from A. The mean of A is 5.05 and the mean of B is 5.04.
+The standard deviations of A and B are 3.22 and 0.58, respectively.
+
+ 
+  ![PartI](PartI.png)
+  
+  
+a. Describe the two distributions.
+
+The distribution for both A and B appear symmetric, bell shaped and uni-modal although not perfectly normal.
+Among the both, A is skewed more toward right and B seems to be uniformly distribited compared to A. 
+
+
+b. Explain why the means of these two distributions are similar but the standard deviations are not.
+
+The means are same for both distrubutions because they are are the same population. The SD is different
+beacuse the distribution range is different for both, figure A has distribution ranging from 0 to 20 and 
+figure B has distribution ranging from 3 to 7 hence the difference in SD.
+
+
+c. What is the statistical principal that describes this phenomenon?
+
+The central limit theorem. WHich states that given certain conditions, the arithmetic mean of a sufficiently
+large number of iterates of independent random variables, each with a well-defined expected value and well-defined
+variance, will be approximately normally distributed, regardless of the underlying distribution.
+
+
+
+### Part II
+
+Consider the four datasets, each with two columns (x and y), provided below.
+options(digits=2)
+
+```{r}
+data1 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(8.04,6.95,7.58,8.81,8.33,9.96,7.24,4.26,10.84,4.82,5.68))
+
+data2 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(9.14,8.14,8.74,8.77,9.26,8.1,6.13,3.1,9.13,7.26,4.74))
+
+data3 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(7.46,6.77,12.74,7.11,7.81,8.84,6.08,5.39,8.15,6.42,5.73))
+
+data4 <- data.frame(x=c(8,8,8,8,8,8,8,19,8,8,8),
+y=c(6.58,5.76,7.71,8.84,8.47,7.04,5.25,12.5,5.56,7.91,6.89))
+
+```
+
+
+For each column, calculate (to two decimal places):
+
+a. The mean (for x and y separately).
+
+```{r}
+
+data1_mean <- c(mean(data1$x), mean(data1$y))
+data2_mean <- c(mean(data2$x), mean(data2$y))
+data3_mean <- c(mean(data3$x), mean(data3$y))
+data4_mean <- c(mean(data4$x), mean(data4$y))
+
+round(data1_mean,2)
+round(data2_mean,2)
+round(data3_mean,2)
+round(data4_mean,2)
+```
+
+
+b. The median (for x and y separately).
+
+
+```{r}
+data1_median <- c(median(data1$x), median(data1$y))
+data2_median <- c(median(data2$x), median(data2$y))
+data3_median <- c(median(data3$x), median(data3$y))
+data4_median <- c(median(data4$x), median(data4$y))
+
+round(data1_median,2)
+round(data2_median,2)
+round(data3_median,2)
+round(data4_median,2)
+
+```
+
+c. The standard deviation (for x and y separately).
+
+
+
+```{r}
+data1_sd <- c(sd(data1$x), sd(data1$y))
+data2_sd <- c(sd(data2$x), sd(data2$y))
+data3_sd <- c(sd(data3$x), sd(data3$y))
+data4_sd <- c(sd(data4$x), sd(data4$y))
+
+round(data1_sd,2)
+round(data2_sd,2)
+round(data3_sd,2)
+round(data4_sd,2)
+
+```
+
+
+For each x and y pair, calculate (also to two decimal places):
+ 
+d. The correlation.
+
+
+```{r}
+data1_cor <- round(cor(data1$x, data1$y),2)
+data2_cor <- round(cor(data2$x, data2$y),2)
+data3_cor <- round(cor(data3$x, data3$y),2)
+data4_cor <- round(cor(data4$x, data4$y),2)
+
+data1_cor
+data2_cor
+data3_cor
+data4_cor
+
+```
+
+
+e. Linear regression equation.
+
+```{r}
+data1_lr <- lm(x~y, data = data1)
+data2_lr <- lm(x~y, data = data2)
+data3_lr <- lm(x~y, data = data3)
+data4_lr <- lm(x~y, data = data4)
+
+data1_lr
+data2_lr
+data3_lr
+data4_lr
+```
+
+
+
+f. R-Squared
+
+```{r}
+data1_r2 <- summary.lm(data1_lr)
+data2_r2 <- summary.lm(data2_lr)
+data3_r2 <- summary.lm(data3_lr)
+data4_r2 <- summary.lm(data4_lr)
+
+data1_r2
+data2_r2
+data3_r2
+data4_r2
+```
+
+
+
+g. For each pair, is it appropriate to estimate a linear regression model? Why or why not? Be
+specific as to why for each pair!
+
+```{r, warning = FALSE, message = FALSE}
+library(ggplot2)
+
+plot_data1 <- ggplot(aes(x,y), data = data1) + geom_point() + 
+              geom_smooth(method='lm',formula=y~x, fill = "blue") + 
+              stat_smooth(colour="red") + labs(title = "Model1")
+
+plot_data2 <- ggplot(aes(x,y), data = data2) + geom_point() + 
+              geom_smooth(method='lm',formula=y~x, fill = "blue") + 
+              stat_smooth(colour="red") + labs(title = "Model2")
+
+plot_data3 <- ggplot(aes(x,y), data = data3) + geom_point() + 
+              geom_smooth(method='lm',formula=y~x, fill = "blue") + 
+              stat_smooth(colour="red") + labs(title = "Model3")
+
+plot_data4 <- ggplot(aes(x,y), data = data4) + geom_point() + 
+              geom_smooth(method='lm',formula=y~x, fill = "blue") + 
+              stat_smooth(colour="red") + labs(title = "Model4")
+
+plot_data1
+plot_data2
+plot_data3
+plot_data4
+
+```             
+              
+
+As one can see from the above plots, not all the data sets exhibit the linear regression model. Model 1 and Model 3 do fit
+the linear regression as we can see the correlation of x and y variables. Model 2 and Model 4 do not fit the linear regression model.
+
+So it is not appropriate to apply or fit a linear regression for all the models.
+
+
+
+h. Explain why it is important to include appropriate visualizations when analyzing data. Include
+any visualization(s) you create.
+
+
+The distribution and quantitative measurements for the four datasets do not give out the major differences we saw
+between the data sets but once we apply visualization by drawing plots, we see the differences between the data sets. So it is important to bring visualization for the data sets when analyzing data.
+
+
+
